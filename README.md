@@ -67,3 +67,23 @@ Conferma: Aggiunge l’animale alla lista e chiude la modale.
 Annulla: Chiude la modale senza modificare la lista.
 
 Obiettivo: L’utente può aggiungere animali specifici utilizzando la modale.
+
+
+Bonus: Utilizzare l'API per Creare Card
+Utilizza l'API:
+/animals?search=[animalName]
+per effettuare una ricerca dell'animale basata sul contenuto dell'input: 
+Sostituisci [animalName] con il valore inserito dall'utente.
+Assicurati di gestire lo stato di caricamento mentre l'API è in fase di risposta (mostra un messaggio come "Caricamento...").
+Dal primo risultato restituito dall'array (se presente), crea un oggetto che abbia queste proprietà:
+name: Il nome dell'animale.
+description: La descrizione dell'animale (o un messaggio predefinito come "Descrizione non disponibile" se manca).
+image: L'immagine dell'animale (usa un'immagine di default se non è disponibile).
+Aggiungi l'oggetto alla lista degli animali e visualizzalo come una card, con:
+Titolo: Il nome dell'animale.
+Immagine (se presente).
+Descrizione.
+Gestione degli errori:
+Se la ricerca non restituisce risultati, informa l'utente con un messaggio di errore. (es.: "Nessun animale trovato")
+Mostra un messaggio in caso di problemi di rete o altri errori. (es.: "Errore durante la ricerca dell'animale")
+Obiettivo: Permetti agli utenti di aggiungere animali specifici utilizzando l'API per ottenere informazioni, mostrando eventuali errori in modo chiaro.

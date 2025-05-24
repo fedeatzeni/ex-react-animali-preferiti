@@ -49,6 +49,10 @@
 
             const [animalName, setAnimalName] = useState("");
 
+            const [isLoading, setIsLoading] = useState(false);
+
+            const [error, setError] = useState("");
+
 
             // aggiunge animale casuale tra opzioni 
             // const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
@@ -56,22 +60,65 @@
             //     setAnimals([...animals, animalsChoices[Math.floor(Math.random() * animalsChoices.length)]])
             // };
 
-            const addAnimal = () => {
-                if (!animalName) return
-                setAnimals(curr => [...curr, animalName])
-                setAnimalName("")
-                setShow(false)
+            // const addAnimal = () => {
+            //     if (!animalName) return
+            //     setAnimals(curr => [...curr, animalName])
+            //     setAnimalName("")
+            //     setShow(false)
+            // };
+
+            const addAnimal = async () => {
+                if (!animalName.trim()) return
+                setIsLoading(true)
+                try {
+                    const response = await fetch(`http://localhost:3333/animals?search=${animalName}`);
+                    const [animal] = await response.json();
+
+                    if (!animal) {
+                        const text = `Nessun animale trovato`
+                        throw new Error(text);
+                        setError(text)
+                    }
+
+                    const result = {
+                        name: animal.name,
+                        description: animal.description || "Descrizione non disponibile",
+                        image: animal.image || "https://picsum.photos/400/300",
+                    }
+                    // console.log(result)
+
+                    setAnimals(curr => [...curr, result])
+                } catch (error) {
+                    console.error(error)
+                    setError(error)
+                } finally {
+                    setIsLoading(false)
+                    setAnimalName("")
+                    setShow(false)
+
+                }
             };
 
             return (
                 <>
+                    {isLoading && <div>Loading...</div>}
+                    {error && <div>{error.message}</div>}
                     <button onClick={() => setShow(true)}>Aggiungi Animale</button>
-
                     <details>
                         <summary>Animali</summary>
-                        <ul>
-                            {animals.map((a, i) => <li key={i}>{a}</li>)}
-                        </ul>
+                        <div>
+                            {/*animals.map((a, i) => <li key={i}>{a}</li>)*/}
+                            {
+                                //card
+                                animals.map((a, i) => (
+                                    <div key={i} className="card">
+                                        <h2>{a.name}</h2>
+                                        <p>{a.description}</p>
+                                        <img src={a.image} alt={a.name} />
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </details>
 
                     <Modal
